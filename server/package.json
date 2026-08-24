@@ -1,7 +1,7 @@
 {
-  "name": "whatrouteserver",
+  "name": "bunkrouteserver",
   "version": "1.0.0",
-  "description": "whatroute lets you find the shortest path between 2 points in IITG using djikstra's algorithm.",
+  "description": "BunkRoute lets you find the shortest path between 2 points in IITG using djikstra's algorithm.",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"

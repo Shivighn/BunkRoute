@@ -1,4 +1,4 @@
-name: WhatRoute
+name: BunkRoute
 
 services: 
   server:
@@ -11,7 +11,7 @@ services:
       - 3000:3000
   frontend:
     build:
-      context: ./WhatRouteClient
+      context: ./bunkRouteclient
       dockerfile: Dockerfile
     restart: unless-stopped
     ports:
