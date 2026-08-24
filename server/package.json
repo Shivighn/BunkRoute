@@ -1,0 +1,16 @@
+{
+  "name": "whatrouteserver",
+  "version": "1.0.0",
+  "description": "whatroute lets you find the shortest path between 2 points in IITG using djikstra's algorithm.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "Srayash",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0"
+  }
+}

@@ -1,0 +1,20 @@
+name: WhatRoute
+
+services: 
+  server:
+    build: 
+      context: ./server
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file: ./server/.env
+    ports:
+      - 3000:3000
+  frontend:
+    build:
+      context: ./WhatRouteClient
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "5173:80"
+    depends_on:
+      - server
