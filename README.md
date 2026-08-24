@@ -1,48 +1,53 @@
 # 📍 BunkRoute
 
-An interactive campus navigation tool that models a college road network as an undirected, weighted graph over a static campus layout to compute optimal routes and shortest travel distances with support for custom intermediate stops. Fully containerized with Docker for zero-configuration local deployment.
+BunkRoute is a campus navigation app that models the IIT Guwahati-style road network as an undirected weighted graph and finds the shortest route between locations. The app supports both direct travel and multi-stop routing with dynamic stop creation using the + and − controls.
 
 ---
 
 ## 🚀 Overview
 
-Whether heading to lectures, grabbing a quick bite at the canteen, or finding the fastest way back to the hostel, navigating expansive campus layouts efficiently requires optimal path planning. **BunkRoute** translates real-world campus pathways into an undirected topological graph where:
+The project is split into two main parts:
 
-* **Vertices (Nodes):** Represent major landmarks, department buildings, lecture halls, hostels, canteen hubs, and road intersections.
-* **Edges:** Represent actual walking/road segments with associated weights corresponding to real-world distances.
+- a Node.js backend that computes shortest paths using Dijkstra's algorithm
+- a Vite + React frontend that lets the user input source, destination, and any number of intermediate stops
 
-Users can select a starting location, a final destination, and dynamically append multiple intermediate stops to generate the full sequential shortest path and cumulative route distance.
+This makes it easy to navigate between landmarks, departments, hostels, and other campus points while accounting for intermediate stops in sequence.
 
 ---
 
 ## ✨ Features
 
-* **Visual Map & Graph Overlay:** Displays both the reference static campus map and the hand-drawn undirected topological graph schema side by side.
-* **Point-to-Point Routing:** Computes the shortest path between any source and destination node.
-* **Multi-Stop Waypoints (`+` feature):** Add arbitrary intermediate stops in sequence ($Node_1 \rightarrow Stop_A \rightarrow Stop_B \dots \rightarrow Node_2$).
-* **Distance Breakdown:** Outputs the exact segment-by-segment path trajectory along with cumulative distance metrics.
-* **Docker Ready:** Fully containerized for fast, consistent local setup across any environment.
+- Dynamic route input with start and end nodes
+- Add intermediate stops with the + button
+- Remove stops with the − button
+- Multi-stop path planning across consecutive node pairs
+- Total cumulative distance calculation
+- Visual campus map display in the frontend
+- Backend API for shortest route requests
+- Docker Compose setup for local deployment
 
 ---
 
 ## 🧠 Algorithmic Approach
 
-1. **Graph Representation:** 
-   * Represented as an Adjacency List $G = (V, E)$ with non-negative edge weights $w(u, v) \ge 0$.
-2. **Shortest Path Computation:**
-   * Uses **Dijkstra's Algorithm** with a Min-Priority Queue for $O((\vert{}V\vert{} + \vert{}E\vert{}) \log \vert{}V\vert{})$ efficiency per segment.
-3. **Multi-Stop Sequencing:**
-   * Given an ordered list of waypoints $[S_0, S_1, S_2, \dots, S_k]$, the path is constructed by chaining consecutive sub-paths:
+1. Graph Representation
+   - The network is stored as an adjacency-list graph with non-negative edge weights.
+2. Shortest Path Computation
+   - Each segment is solved using Dijkstra's algorithm with a min-heap priority queue.
+3. Multi-Stop Sequencing
+   - For an ordered list of stops $[S_0, S_1, S_2, \dots, S_k]$, the app computes:
    $$\text{Total Distance} = \sum_{i=0}^{k-1} \text{dist}(S_i, S_{i+1})$$
+   - The final route is the concatenation of the shortest paths between consecutive stops.
 
 ---
 
 ## 🛠️ Tech Stack
 
-* **Frontend / UI:** HTML5, CSS3, JavaScript
-* **Core Logic / Routing Engine:** C++ / JavaScript
-* **Containerization:** Docker, Docker Compose
-* **Assets:** Static Campus Layout & Topological Graph Schema
+- Frontend: React, Vite, JavaScript
+- Backend: Node.js, Express
+- Routing: Dijkstra's shortest path algorithm
+- Containerization: Docker, Docker Compose
+- Styling: CSS, Tailwind-inspired utility classes
 
 ---
 
@@ -54,9 +59,11 @@ BunkRoute/
 ├── README.md
 ├── server/
 │   ├── Dockerfile
+│   ├── .env
 │   ├── graph.js
 │   ├── index.js
 │   ├── package.json
+│   ├── package-lock.json
 │   └── utils/
 │       └── MinHeap.js
 ├── bunkRouteclient/
@@ -64,8 +71,8 @@ BunkRoute/
 │   ├── eslint.config.js
 │   ├── index.html
 │   ├── package.json
+│   ├── package-lock.json
 │   ├── vite.config.js
-│   ├── README.md
 │   ├── public/
 │   │   ├── favicon.png
 │   │   └── maps/
@@ -78,3 +85,81 @@ BunkRoute/
 │           └── Modal.jsx
 └── .git/
 ```
+
+---
+
+## ▶️ Run Locally
+
+### Backend
+
+```bash
+cd C:\Vighnu\Coding\_repos\BunkRoute\server
+npm install
+node index.js
+```
+
+The server starts on:
+
+```text
+http://localhost:3000
+```
+
+### Frontend
+
+```bash
+cd C:\Vighnu\Coding\_repos\BunkRoute\bunkRouteclient
+npm install
+npm run dev
+```
+
+Open the app at:
+
+```text
+http://localhost:5173
+```
+
+---
+
+## API
+
+### POST /route
+
+Send a JSON body like:
+
+```json
+{
+  "stops": [12, 18, 42, 9]
+}
+```
+
+Example response:
+
+```json
+{
+  "from": 12,
+  "to": 9,
+  "path": [12, 13, 14, 15, 16, 18, 42, 9],
+  "totalDis": 786,
+  "stops": [12, 18, 42, 9]
+}
+```
+
+---
+
+## Docker
+
+From the project root:
+
+```bash
+docker compose up --build
+```
+
+This runs both the API and the frontend together.
+
+---
+
+## Project Notes
+
+- The frontend and server are intentionally separated for clean API-based routing.
+- The route computation is based on campus node graph data stored in the backend.
+- The UI supports flexible intermediate waypoints using + and − controls for route editing.
